@@ -1,0 +1,20 @@
+---
+description: Conventions when editing .gemini or .claude hooks and agent skills
+globs: .gemini/**
+alwaysApply: false
+---
+
+# Hooks and skills (Gemini + Claude config trees)
+
+## Hooks (Python on stdin/stdout)
+
+- **Input**: one JSON object on **stdin** (per the client; fields often include `tool_name`, `tool_input`).
+- **Output**: a JSON object on **stdout**; block hooks use `"decision": "deny"` and `"reason"`; allow paths use `"decision": "allow"`. **Always** return valid JSON so the client does not break.
+- **Prettier** (`.gemini/hooks/after-tool-prettier.py`): uses **`hook_io`**; resolve `file_path` against `Path.cwd()`; use `npx` from `shutil.which`. Fail open (**allow**) if Prettier is unavailable; log to **stderr**.
+- **Block env** (`.gemini/hooks/before-tool-block-env.py`): deny when the serialized `tool_input` is unsafe (e.g. references `.env`); on error, **allow** and log to **stderr** unless you tighten policy in code.
+
+## Skills (`SKILL.md` + optional `evals.py`)
+
+- Use YAML frontmatter with **name** and **description** at the top of `SKILL.md` when the client expects it.
+- **commit-message** evals: keep checks **deterministic** (e.g. regex on golden subject lines), not hand-waved pass/fail rows.
+- **security-review**: this skill is about **delegating** to a subagent with a clear scope; it is not a substitute for automated SAST in CI.

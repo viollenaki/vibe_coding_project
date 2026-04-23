@@ -1,0 +1,13 @@
+---
+description: When editing .claude hooks and skills, follow the same rules as .gemini
+globs: .claude/**
+alwaysApply: false
+---
+
+# .claude tree — follow Gemini conventions
+
+`.claude` mirrors the Gemini CLI / agent layout. **Use the same hook and skill conventions** as in `.cursor/rules/hooks-and-skills.mdc` (written for `.gemini`): JSON on stdin/stdout, deterministic `evals.py` where present, and security reviewed via delegation, not a single monolithic pass.
+
+If behavior diverges between the two trees, **prefer `.gemini` as the source of truth** unless your client only loads `.claude`—then update both.
+
+**Hook naming (aligned with events):** `before-tool-*.py`, `after-tool-*.py`, and shared **`.gemini/lib/hook_io.py`**.

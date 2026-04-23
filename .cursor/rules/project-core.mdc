@@ -1,0 +1,12 @@
+---
+description: Project scope, config layout, and invariants for vibe_coding_project
+alwaysApply: true
+---
+
+# vibe_coding_project — core context
+
+- This repo is primarily a **harness** for **Cursor** and **Gemini CLI**-style tooling, with optional product briefs in **`context/`**. Use **`GEMINI.md`** (repo index) and **`ARCHITECTURE.md`**. Treat **`.gemini/`** (and any **`.claude/`** mirror) as the source of truth for **hooks** and **skills**.
+- **Secrets**: Do not ask the user to paste env values into chat, and do not work around **`.env` blocks** in hooks. If a task needs secrets, use placeholders and document the variable names only.
+- **Hooks** are run from the **repository root**; `settings.json` should call `python .gemini/hooks/before-tool-*.py` and `after-tool-*.py`. Shared helpers live in **`.gemini/lib/hook_io.py`**.
+- **Mirror**: When you change behavior under **`.gemini`**, consider updating the matching file under **`.claude`** so both clients stay aligned.
+- Prefer **small, focused** edits: match existing hook/skill style; do not add unrelated refactors in the same change.
